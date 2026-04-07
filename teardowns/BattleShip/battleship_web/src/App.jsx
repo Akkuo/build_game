@@ -4,13 +4,10 @@ import './App.css'
 const GRID_SIZE = 100;
 const SHIP_TYPES = [
   { id: 'carrier', name: '航空母艦(5)', size: 5 },
-  { id: 'battleship1', name: '戰艦(4)', size: 4 },
-  { id: 'battleship2', name: '戰艦(4)', size: 4 },
-  { id: 'destroyer1', name: '驅逐(3)', size: 3 },
-  { id: 'destroyer2', name: '驅逐(3)', size: 3 },
-  { id: 'submarine', name: '潛艦(3)', size: 3 },
-  { id: 'patrol1', name: '巡邏(2)', size: 2 },
-  { id: 'patrol2', name: '巡邏(2)', size: 2 }
+  { id: 'battleship', name: '戰艦(4)', size: 4 },
+  { id: 'destroyer', name: '驅逐(3)', size: 3 },
+  { id: 'submarine', name: '潛艇(3)', size: 3 },
+  { id: 'patrol', name: '巡邏(2)', size: 2 }
 ];
 
 // Audio Dopamine Engine (ASMR 神經駭客模組)
@@ -267,10 +264,6 @@ function App() {
     <div className="app-container" onClick={initAudio}>
       <div className="header">BATTLESHIP PROTO</div>
 
-      <div className={`turn-banner ${turn === 'enemy' ? 'enemy' : ''}`}>
-          {turn === 'player' ? `🟢 你的回合 (Combo x${combo})` : `🔴 敵方開火中...`}
-      </div>
-
       <div className="battlefield">
           {/* Enemy Grid (Player targets this) */}
           <div className="board-section">
@@ -288,6 +281,10 @@ function App() {
           </div>
 
            {/* Player Grid (Bot targets this) */}
+           <div className={`turn-banner ${turn === 'enemy' ? 'enemy' : ''}`}>
+              {turn === 'player' ? `🟢 你的回合 (Combo x${combo})` : `🔴 敵方開火中...`}
+           </div>
+           
            <div className="board-section">
               <div className="board-label">🛡️ 我方陣地 (自動佈陣)</div>
               <div className="grid">
