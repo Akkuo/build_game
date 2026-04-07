@@ -1,0 +1,203 @@
+.app-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  padding: 2rem;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.header h1 {
+  font-size: 2.5rem;
+  font-weight: 900;
+  background: linear-gradient(90deg, #ff8a00, #e52e71, #af52de);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin: 0 0 0.5rem 0;
+}
+
+.level-info {
+  font-size: 1.2rem;
+  color: #a79dc0;
+  letter-spacing: 1px;
+}
+
+.controls {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+.btn-secondary {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.2);
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.btn-secondary:hover { background: rgba(255,255,255,0.2); }
+.btn-secondary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+.tubes-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+  align-content: center;
+  max-width: 800px;
+  flex: 1;
+}
+
+.tube-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  cursor: pointer;
+  /* EaseOutBack 提起動畫 */
+  transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
+  transform: translateY(0);
+}
+
+.tube-wrapper.selected {
+  /* TA 規格: 往上提取 + Squash Stretch */
+  transform: translateY(-25px) scaleX(0.95) scaleY(1.05); 
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-10px); }
+  40% { transform: translateX(10px); }
+  60% { transform: translateX(-6px); }
+  80% { transform: translateX(6px); }
+}
+
+.tube-wrapper.invalid {
+  animation: shake 0.35s ease-in-out;
+}
+
+/* 三明治圖層法 (背框) */
+.tube {
+  width: 50px;
+  height: 180px;
+  background: var(--glass-bg);
+  border: 4px solid var(--glass-border);
+  border-top: none;
+  border-radius: 0 0 25px 25px;
+  display: flex;
+  flex-direction: column-reverse; /* 水從底部往上疊 */
+  overflow: hidden;
+  position: relative;
+  box-shadow: inset 0 -5px 15px rgba(0,0,0,0.5), 0 10px 20px rgba(0,0,0,0.3);
+}
+
+/* 玻璃高光 (頂層假 3D) */
+.tube::after {
+  content: '';
+  position: absolute;
+  top: 5px;
+  left: 6px;
+  width: 6px;
+  height: 160px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0.5), transparent);
+  border-radius: 5px;
+  pointer-events: none;
+  z-index: 10;
+}
+
+/* Opaque 流體避免 Overdraw */
+.liquid {
+  width: 100%;
+  height: 25%; /* TUBE_CAPACITY = 4 定量 */
+  position: relative;
+  transition: height 0.35s ease-in-out;
+  box-shadow: inset 0px 4px 6px rgba(0,0,0,0.15);
+}
+
+/* 頂端假水紋波動 (CSS 動畫模擬 Sine 波) */
+.liquid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 4px;
+  background: rgba(255,255,255,0.2);
+  border-radius: 50%;
+  animation: wave 2s infinite alternate ease-in-out;
+}
+
+@keyframes wave {
+  0% { transform: translateY(-1px) scaleX(0.9); }
+  100% { transform: translateY(1px) scaleX(1.1); }
+}
+
+/* 色碼庫 */
+.color-red { background-color: #ff3b30; }
+.color-blue { background-color: #007aff; }
+.color-green { background-color: #34c759; }
+.color-yellow { background-color: #ffcc00; }
+.color-purple { background-color: #af52de; }
+.color-orange { background-color: #ff9500; }
+.color-cyan { background-color: #32ade6; }
+.color-pink { background-color: #ff2d55; }
+
+.victory-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.85);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 100;
+  animation: fadeIn 0.4s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.victory-overlay h2 {
+  font-size: 3rem;
+  margin-bottom: 2rem;
+  background: linear-gradient(135deg, #32ade6, #af52de);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #007aff, #af52de);
+  border: none;
+  padding: 1.2rem 3rem;
+  color: white;
+  font-size: 1.5rem;
+  border-radius: 50px;
+  cursor: pointer;
+  font-weight: 800;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+  transition: transform 0.15s;
+}
+
+.btn-primary:active {
+  transform: scale(0.9);
+}
+
+/* 慶祝高光 CSS */
+@keyframes glow {
+  0% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+  50% { box-shadow: 0 0 20px 10px rgba(255,255,255,0.4); }
+  100% { box-shadow: 0 0 0 rgba(255,255,255,0); }
+}
+
+.tube-wrapper.completed .tube {
+  animation: glow 0.6s ease-out;
+}
