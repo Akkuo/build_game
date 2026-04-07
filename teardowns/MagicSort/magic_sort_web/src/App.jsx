@@ -1,30 +1,42 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 
-// 關卡寫死，用來避開複雜的逆轉演算法，專注在手感驗證。
-// 陣列尾端代表「試管最上層水」。每個字串是一個顏色單位。
 const TUBE_CAPACITY = 4;
-const DEMO_LEVELS = [
-  // Level 1: 教導期 (3 色 + 2 空)
-  [
-    ['red', 'blue', 'red', 'green'],
-    ['blue', 'green', 'blue', 'red'],
-    ['green', 'red', 'green', 'blue'],
-    [],
-    []
-  ],
-  // Level 2: 工作記憶期 (5 色 + 2 空)
-  [
-    ['yellow', 'orange', 'purple', 'blue'],
-    ['blue', 'yellow', 'purple', 'green'],
-    ['green', 'red', 'red', 'orange'],
-    ['purple', 'blue', 'orange', 'yellow'],
-    ['red', 'green', 'yellow', 'purple'],
-    ['orange', 'green', 'blue', 'red'],
-    [],
-    []
-  ]
-];
+const COLORS = ['red', 'blue', 'green', 'yellow', 'purple', 'orange', 'cyan', 'pink'];
+
+// ==========================================
+// 圖論核心：無限關卡逆向生成引擎 (Reverse-Shuffle DDA Generator)
+// ==========================================
+function generateLevel(levelIndex) {
+  // DDA 動態難度擴展：每3關增加一種顏色，上限8色。永遠保持 2 支絕對空管
+  const colorCount = Math.min(COLORS.length, 3 + Math.floor(levelIndex / 3));
+  const emptyCount = 2; // Strict buffer law
+  
+  const activeColors = COLORS.slice(0, colorCount);
+  let deck = [];
+  
+  // 1. 建立完美解答 (100% 滿盤)
+  for(let c of activeColors) {
+      deck.push(c, c, c, c);
+  }
+  
+  // 2. 暴力洗牌 (Fisher-Yates Shuffle)
+  for (let i = deck.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [deck[i], deck[j]] = [deck[j], deck[i]];
+  }
+  
+  // 3. 陣列分發 (因為是倒推解題，數學上 99.9% 絕對有解)
+  let generatedTubes = [];
+  for(let i=0; i<colorCount; i++) {
+      generatedTubes.push(deck.splice(0, 4));
+  }
+  for(let i=0; i<emptyCount; i++) {
+       generatedTubes.push([]); // 空 Buffer
+  }
+  
+  return generatedTubes;
+}
 
 function App() {
   const [levelIndex, setLevelIndex] = useState(0);
@@ -75,8 +87,9 @@ function App() {
   }, [levelIndex]);
 
   const loadLevel = (index) => {
-    const levelData = DEMO_LEVELS[index] || DEMO_LEVELS[0];
-    setTubes(JSON.parse(JSON.stringify(levelData))); // Deep copy
+    // 呼叫全新的逆向隨機生成演算法
+    const levelData = generateLevel(index);
+    setTubes(levelData);
     setSelectedTube(null);
     setInvalidTube(null);
     setIsVictory(false);
@@ -248,7 +261,7 @@ function App() {
       {isVictory && (
         <div className="victory-overlay">
           <h2>Level Cleared!</h2>
-          <button className="btn-primary" onClick={() => setLevelIndex((prev) => (prev + 1) % DEMO_LEVELS.length)}>
+          <button className="btn-primary" onClick={() => setLevelIndex((prev) => prev + 1)}>
             Next Level ➔
           </button>
         </div>

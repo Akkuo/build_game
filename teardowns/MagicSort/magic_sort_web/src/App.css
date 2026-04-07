@@ -2,10 +2,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  position: relative;
+  /* 強制依照 UI Hardware Specs 鎖定 1080x2340 比例 */
+  aspect-ratio: 1080 / 2340;
   width: 100%;
-  height: 100%;
-  padding: 2rem;
+  max-width: 420px; /* 桌面預覽物理極限寬度 */
+  max-height: 98vh; /* 避免超出螢幕，留邊 */
+  margin: auto;
+  padding: 1.5rem 0.5rem;
   box-sizing: border-box;
+  border: 4px dashed rgba(255, 255, 255, 0.2); /* 遊戲框架安全區邊線 */
+  border-radius: 25px; /* 模擬手機機身圓角 */
+  background: var(--bg-gradient); /* 防止超出框框 */
+  overflow: hidden; /* 切割掉溢出的液體光影 */
 }
 
 .header {
