@@ -1,0 +1,166 @@
+:root {
+  --bg-dark: #132135;
+  --bg-grad: linear-gradient(180deg, #132135 0%, #050a12 100%);
+  --grid-line: rgba(255, 255, 255, 0.15);
+  --hit-color: #ff4757;
+  --miss-color: #747d8c;
+  --ship-color: #2f3542;
+  --sunk-color: #3742fa;
+}
+
+body {
+  margin: 0;
+  background-color: #000;
+  color: white;
+  font-family: system-ui, -apple-system, sans-serif;
+  user-select: none;
+}
+
+/* UI Hardware Specs: 1080x2340 強制邊界防呆 */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  aspect-ratio: 1080 / 2340;
+  width: 100%;
+  max-width: 450px;
+  max-height: 98vh;
+  margin: auto;
+  background: var(--bg-grad);
+  border: 4px dashed rgba(255,255,255,0.3);
+  border-radius: 20px;
+  overflow: hidden;
+  padding: 0.5rem;
+  box-sizing: border-box;
+}
+
+.header {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 800;
+  padding: 0.5rem;
+  background: rgba(0,0,0,0.5);
+  border-radius: 8px;
+  margin-bottom: 0.5rem;
+  color: #ffa502;
+}
+
+/* 戰場佈局：極限利用 1080x2340 長度，上下擺放兩個 10x10 陣列 */
+.battlefield {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  gap: 0.5rem;
+  overflow: hidden;
+}
+
+.board-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.board-label {
+  font-size: 0.9rem;
+  font-weight: bold;
+  margin-bottom: 0.2rem;
+}
+
+.grid {
+  width: 95%;
+  aspect-ratio: 1/1; /* 強制正方形 */
+  display: grid;
+  grid-template-columns: repeat(10, 1fr);
+  grid-template-rows: repeat(10, 1fr);
+  gap: 1px;
+  background: #34495e;
+  border: 2px solid #7f8c8d;
+  box-shadow: 0 0 20px rgba(0,0,0,0.5);
+}
+
+.cell {
+  background: rgba(255,255,255,0.05);
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: bold;
+  color: white;
+  transition: transform 0.1s;
+}
+
+/* 點擊回饋 */
+.grid.clickable .cell:active {
+  transform: scale(0.85);
+}
+
+/* 狀態視覺化 */
+.cell.ship { background: var(--ship-color); }
+.cell.hit { 
+  background: var(--hit-color); 
+  animation: hit-shake 0.3s cubic-bezier(.36,.07,.19,.97) both;
+}
+.cell.miss { background: var(--miss-color); opacity: 0.6; }
+.cell.sunk { background: var(--sunk-color); box-shadow: inset 0 0 10px #000; }
+
+@keyframes hit-shake {
+  10%, 90% { transform: translate3d(-1px, 0, 0); }
+  20%, 80% { transform: translate3d(2px, 0, 0); background: #fff; }
+  30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+  40%, 60% { transform: translate3d(4px, 0, 0); }
+}
+
+.turn-banner {
+  text-align: center;
+  padding: 0.5rem;
+  font-weight: 800;
+  font-size: 1.2rem;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-left: 5px solid #2ed573;
+  transition: all 0.3s;
+}
+
+.turn-banner.enemy {
+  border-left-color: #ff4757;
+  color: #ff4757;
+}
+
+.logs {
+  background: rgba(0,0,0,0.8);
+  height: 80px;
+  overflow-y: auto;
+  font-size: 0.75rem;
+  padding: 0.5rem;
+  border-radius: 5px;
+  color: #a4b0be;
+}
+.logs p { margin: 2px 0; }
+.log-hit { color: #ff6b81; font-weight: bold; }
+.log-miss { color: #ced6e0; }
+
+.victory-modal {
+  position: absolute;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0,0,0,0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+.victory-modal h1 { color: #eccc68; font-size: 3rem; }
+.btn {
+  padding: 1rem 2rem;
+  font-size: 1.2rem;
+  background: #ff4757;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+.btn:active { transform: scale(0.95); }
