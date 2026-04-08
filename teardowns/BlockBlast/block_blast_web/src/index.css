@@ -1,0 +1,34 @@
+:root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: dark;
+  background-color: #1a1a1a;
+  color: rgba(255, 255, 255, 0.87);
+}
+
+body {
+  margin: 0;
+  display: flex;
+  place-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  /* 預防瀏覽器原生的滑動刷新與反彈 */
+  overscroll-behavior: none; 
+  user-select: none;
+}
+
+#root {
+  /* 嚴格的開發實體邊界 1080x2340 */
+  width: 1080px;
+  height: 2340px;
+  background-color: #242424;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 50px rgba(0, 0, 0, 0.8);
+  
+  /* 動態向內縮放以適應使用者的 PC 瀏覽器寬高，無需開 F12 */
+  transform: scale(min(calc(100vw / 1080), calc(100vh / 2340)));
+  transform-origin: center center;
+}

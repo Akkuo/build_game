@@ -46,7 +46,7 @@ description: 執行休閒遊戲的自動化逆向拆解與規格轉換
 - 分析廣告素材與實際遊戲的 Meta 故事連接（如家裝、拯救元素）。
 - 將結果整理儲存，預備寫入規格書的 **`主題包裝`** 分頁。
 
-### 7. 轉換與交付 (Deliverable Generation)
-1. 核對 `teardown-deliverables-spec.md` 的所有欄位是否已完成。
-2. 產出最終的成果物摘要給使用者。
-3. 若需自動化，可利用 Python (搭配 `openpyxl`) 將上列中繼數據，直接填寫入 `FarmJam_規格書.xlsx` 對應的 Sheet 中。
+### 7. 轉換與交付 (Deliverables)
+1. 確保 01-05 的 Markdown 檔案皆已完成寫入。
+2. 執行 python scripts/export_teardowns.py --project [專案名稱] 將數據自動產出為高品質的 Word 文件。
+3. 在對話中通知使用者已產出。
