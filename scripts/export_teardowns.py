@@ -24,7 +24,7 @@ for md_path in md_files:
         continue
         
     doc = Document()
-    doc.add_heading(filename.replace(".md", "") + " 規格書", 0)
+    doc.add_heading(f"{args.project} - {filename.replace('.md', '')} 規格書", 0)
     
     with open(md_path, 'r', encoding='utf-8') as f:
         lines = f.readlines()
@@ -52,9 +52,9 @@ for md_path in md_files:
             doc.add_paragraph(line.replace("**", ""))
 
     # 輸出檔名對應原始 markdown 檔名
-    out_filename = filename.replace(".md", ".docx")
+    out_filename = f"{args.project}_{filename.replace('.md', '.docx')}"
     word_out_path = os.path.join(output_dir, out_filename)
     doc.save(word_out_path)
-    print(f"✅ 獨立產出 Word 成功: {word_out_path}")
+    print(f"[OK] 獨立產出 Word 成功: {word_out_path}")
 
-print("🎉 所有產出作業完畢！")
+print("Done! All exports completed.")
